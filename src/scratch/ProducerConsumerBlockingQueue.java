@@ -9,12 +9,12 @@ import java.util.concurrent.Future;
 
 import util.Colors;
 
-class Producer implements Runnable {
+class ProducerBQ implements Runnable {
     private ArrayBlockingQueue<Integer> q;
     private String color;
     private int delay;
 
-    Producer(ArrayBlockingQueue<Integer> q, String color, int delay) {
+    ProducerBQ(ArrayBlockingQueue<Integer> q, String color, int delay) {
         this.q = q;
         this.color = color;
         this.delay = delay;
@@ -36,12 +36,12 @@ class Producer implements Runnable {
     }
 }
 
-class Consumer implements Runnable {
+class ConsumerBQ implements Runnable {
     private ArrayBlockingQueue<Integer> q;
     private String color;
     private int delay;
 
-    Consumer(ArrayBlockingQueue<Integer> q, String color, int delay) {
+    ConsumerBQ(ArrayBlockingQueue<Integer> q, String color, int delay) {
         this.q = q;
         this.color = color;
         this.delay = delay;
@@ -71,19 +71,20 @@ class Consumer implements Runnable {
 public class ProducerConsumerBlockingQueue {
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
+    
 
         ArrayBlockingQueue<Integer> q = new ArrayBlockingQueue<>(3);
 
         ExecutorService e = Executors.newFixedThreadPool(10);
 
-        e.submit(new Consumer(q, Colors.nextColor(), 100));
-        e.submit(new Consumer(q, Colors.nextColor(), 200));
-        e.submit(new Consumer(q, Colors.nextColor(), 300));
-        e.submit(new Consumer(q, Colors.nextColor(), 400));
+        e.submit(new ConsumerBQ(q, Colors.nextColor(), 100));
+        e.submit(new ConsumerBQ(q, Colors.nextColor(), 200));
+        e.submit(new ConsumerBQ(q, Colors.nextColor(), 300));
+        e.submit(new ConsumerBQ(q, Colors.nextColor(), 400));
 
-        Future<?> producer1 = e.submit(new Producer(q, Colors.nextColor(), 100));
-        Future<?> producer2 = e.submit(new Producer(q, Colors.nextColor(), 150));
-        Future<?> producer3 = e.submit(new Producer(q, Colors.nextColor(), 200));
+        Future<?> producer1 = e.submit(new ProducerBQ(q, Colors.nextColor(), 100));
+        Future<?> producer2 = e.submit(new ProducerBQ(q, Colors.nextColor(), 150));
+        Future<?> producer3 = e.submit(new ProducerBQ(q, Colors.nextColor(), 200));
 
         e.shutdown();
 
